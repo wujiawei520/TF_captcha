@@ -39,25 +39,31 @@ class generateCaptcha():
             Y = np.reshape(Y,(batch_size,self.char_num*self.classes))
             yield X,Y
 
-    def decode_captcha(self,y):
-        y = np.reshape(y,(len(y),self.char_num,self.classes))
-        return ''.join(self.characters[x] for x in np.argmax(y,axis = 2)[0,:])
-
     def get_parameter(self):
         return self.width,self.height,self.char_num,self.characters,self.classes
 
+    # 生成测试数据
     def gen_test_captcha(self):
         image = ImageCaptcha(width = self.width,height = self.height)
         captcha_str = ''.join(random.sample(self.characters,self.char_num))
         img = image.generate_image(captcha_str)
-        img.save(captcha_str + '.jpg')
+        img.save('captcha/' + captcha_str + '.jpg')
 
-        X = np.zeros([1,self.height,self.width,1])
-        Y = np.zeros([1,self.char_num,self.classes])
-        img = img.convert('L')
-        img = np.array(img.getdata())
-        X[0] = np.reshape(img,[self.height,self.width,1])/255.0
-        for j,ch in enumerate(captcha_str):
-            Y[0,j,self.characters.find(ch)] = 1
-        Y = np.reshape(Y,(1,self.char_num*self.classes))
-        return X,Y
+        # X = np.zeros([1,self.height,self.width,1])
+        # Y = np.zeros([1,self.char_num,self.classes])
+
+        # img = img.convert('L')
+        # img = np.array(img.getdata())
+        # X[0] = np.reshape(img,[self.height,self.width,1])/255.0
+        # for j,ch in enumerate(captcha_str):
+        #     Y[0,j,self.characters.find(ch)] = 1
+        # Y = np.reshape(Y,(1,self.char_num*self.classes))
+        # return X,Y
+
+if __name__ == '__main__':
+    num = input('Please enter the number of validation codes required for production: ')
+    g = generateCaptcha()
+    for n in range(int(num)):
+        g.gen_test_captcha()
+        n += 1
+    print('Successful generation of %s verification codes.' % num)

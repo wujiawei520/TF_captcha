@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from PIL import Image, ImageFilter
+from PIL import Image
 import tensorflow as tf
 import numpy as np
 import string
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.95)
     with tf.Session(config=tf.ConfigProto(log_device_placement=False,gpu_options=gpu_options)) as sess:
         sess.run(init_op)
-        saver.restore(sess, "capcha_model.ckpt")
-        pre_list =  sess.run(predict,feed_dict={x: [test_x], keep_prob: 1})
+        saver.restore(sess, 'model/capcha_model.ckpt')
+        pre_list = sess.run(predict,feed_dict={x: [test_x], keep_prob: 1})
         for i in pre_list:
             s = ''
             for j in i:
